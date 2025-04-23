@@ -1,0 +1,222 @@
+@import url('https://fonts.cdnfonts.com/css/poppins');
+@import url('https://cdn.jsdelivr.net/gh/FortAwesome/Font-Awesome@6.x/css/all.min.css');
+@import url('/assets/css/games.css');
+@import url('/assets/css/navbar.css');
+
+* {
+    font-family: 'Poppins', sans-serif;
+    user-select: none;
+}
+
+html {
+    min-height: 100vh;
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: #1d1d1d;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    color: #fff;
+    min-height: 100%;
+}
+
+#spacer {
+    min-height: 85vh;
+}
+
+.noscroll {
+    overflow: hidden;
+}
+
+.content {
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+h1 {
+    font-size: 95px;
+    color: #fff;
+    text-align: center;
+}
+
+.centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+h1.title {
+    font-size: 95px;
+    color: #fff;
+    margin-bottom: 50px;
+}
+
+button {
+    background: transparent;
+    font-size: 23px;
+    color: #fff;
+    text-decoration: none;
+    border: 2px solid #fff;
+    padding: 15px 25px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+button:hover {
+    background-color: #383636;
+    border-color: #fff;
+    color: #fff;
+}
+
+.background-clip {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+}
+
+li {
+    text-align: left;
+}
+
+a {
+    color: #fff;
+    text-decoration: none;
+}
+
+input {
+    font-size: 23px;
+    color: #fff;
+    border: 2px solid #fff;
+    padding: 15px 25px;
+    border-radius: 10px;
+    text-align: center;
+    background: transparent;
+    outline: none;
+}
+
+input:focus {
+    background-color: #383636;
+    border-color: #fff;
+    color: #fff;
+}
+
+.artworks {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.art {
+    min-width: 200px;
+    min-height: 200px;
+    border-radius: 15px;
+    border: 3px solid #ffffff;
+    cursor: pointer;
+    transition: .4s;
+    position: relative;
+    box-shadow: 0px 0px 10px #00000020;
+    margin: 10px;
+    overflow: hidden;
+}
+
+.art:hover {
+    box-shadow: 0px 0px 50px #000000;
+    filter: brightness(95%);
+    transform: translateY(-5px);
+    border: 3px solid #383636;
+}
+
+.art>img {
+    object-fit: cover;
+    position: absolute;
+    left: 0;
+    top: 0;
+    object-position: center;
+    width: 200px;
+    height: 200px;
+}
+
+.art:after {
+    content: '';
+    top: 0;
+    left: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 100%);
+}
+
+.art>span {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: #fff;
+    z-index: 10;
+    font-size: 15px;
+}
+
+footer {
+    margin: 50px;
+}
+
+footer>a {
+    margin-left: 50px;
+}
+
+.frame {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    background: #1d1d1d;
+    z-index: 9999999999;
+    height: 100vh;
+}
+
+.frame>iframe {
+    width: 100%;
+    height: calc(100% - 50px);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.frame>.nav {
+    display: flex;
+    position: absolute;
+    top: 0;
+    background: #383636;
+    width: 100%;
+    height: 50px;
+}
+
+.frame>.nav>.right {
+    display: flex;
+    position: absolute;
+    right: 0;
+    height: 100%;
+}
+
+.frame>.nav .item {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.frame>.nav .item i {
+    font-size: 30px;
+}
+
+.noresults {
+    text-align: center;
+    min-height: 45vh;
+}
