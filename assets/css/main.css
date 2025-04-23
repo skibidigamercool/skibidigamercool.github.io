@@ -55,7 +55,7 @@ body {
 
 h1 {
     font-size: 95px;
-    color: #fff;
+    color: var(--color-fg);
     text-align: center;
 }
 
@@ -69,16 +69,16 @@ h1 {
 
 h1.title {
     font-size: 95px;
-    color: #fff;
+    color: var(--color-fg);
     margin-bottom: 50px;
 }
 
 button {
     background: transparent;
     font-size: 23px;
-    color: #fff;
+    color: var(--color-fg);
     text-decoration: none;
-    border: 2px solid #fff;
+    border: 2px solid var(--color-fg);
     padding: 15px 25px;
     border-radius: 10px;
     cursor: pointer;
@@ -87,8 +87,8 @@ button {
 
 button:hover {
     background-color: #383636;
-    border-color: #fff;
-    color: #fff;
+    border-color: var(--color-fg);
+    color: var(--color-fg);
 }
 
 .background-clip {
@@ -103,14 +103,14 @@ li {
 }
 
 a {
-    color: #fff;
+    color: var(--color-fg);
     text-decoration: none;
 }
 
 input {
     font-size: 23px;
-    color: #fff;
-    border: 2px solid #fff;
+    color: var(--color-fg);
+    border: 2px solid var(--color-fg);
     padding: 15px 25px;
     border-radius: 10px;
     text-align: center;
@@ -120,8 +120,8 @@ input {
 
 input:focus {
     background-color: #383636;
-    border-color: #fff;
-    color: #fff;
+    border-color: var(--color-fg);
+    color: var(--color-fg);
 }
 
 .artworks {
@@ -135,7 +135,7 @@ input:focus {
     min-width: 200px;
     min-height: 200px;
     border-radius: 15px;
-    border: 3px solid #ffffff;
+    border: 3px solid var(--color-fg);
     cursor: pointer;
     transition: .4s;
     position: relative;
@@ -175,7 +175,7 @@ input:focus {
     position: absolute;
     bottom: 20px;
     left: 20px;
-    color: #fff;
+    color: var(--color-fg);
     z-index: 10;
     font-size: 15px;
 }
