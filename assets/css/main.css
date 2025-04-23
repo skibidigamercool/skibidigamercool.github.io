@@ -7,6 +7,20 @@
     font-family: 'Poppins', sans-serif;
     user-select: none;
 }
+:root {
+  --grid-unit: 1rem;
+  --border-radius-base: 0.5rem;
+}
+
+[data-theme="light"] {
+  --color-bg: #ffffff;
+  --color-fg: #000000;
+}
+
+[data-theme="dark"] {
+  --color-bg: #1d1d1d;
+  --color-fg: #ffffff;
+}
 
 html {
     min-height: 100vh;
@@ -14,12 +28,12 @@ html {
 }
 
 body {
-    background-color: #1d1d1d;
+  background-color: var(--color-bg);
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
-    color: #fff;
+  color: var(--color-fg);
     min-height: 100%;
 }
 
