@@ -3,7 +3,7 @@ let uptown;
 
 function setup() {
   createCanvas(400, 400);
-
+       
   train = {
     x:300,
     y:350,
