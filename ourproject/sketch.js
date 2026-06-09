@@ -491,7 +491,7 @@ function draw() {
       text("• P1 Move: A / D keys", 60, 110);
       text("• P1 Shoot: F key", 60, 140);
       text("• P2 Move: Left / Right Arrows", 60, 180);
-      text("• P2 Shoot: / key", 60, 210);
+      text("• P2 Shoot: . key", 60, 210);
     } else {
       text("• P1 Controls: Left/Right arrows & Red FIRE", 60, 110);
       text("• P2 Controls: Left/Right arrows & Yellow FIRE", 60, 150);
@@ -757,7 +757,7 @@ function keyPressed() {
     }
 
     // bullets for player 2 - rahib
-    if (key == "/" && player2.alive) {
+    if (key == "." && player2.alive) { // changed slash key shooting to period key shooting
       bullets.push(new Bullet(
         player2.x,
         player2.y + 25,
