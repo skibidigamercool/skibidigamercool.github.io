@@ -59,7 +59,11 @@ function resetGame() { //the function we use to reset the game - rahib
     y: 295,
     alive: true,
     health: 100,
-    weapon: "pistol"
+    weapon: "pistol",
+    ammo: 8,
+    maxAmmo: 8,
+    isReloading: false,
+    reloadEndTime: 0
   }; // changed default weapon to p1weapon and p2weapon and basically it changes when you input into the text thingy - rahib
 
   player2 = {
@@ -67,7 +71,12 @@ function resetGame() { //the function we use to reset the game - rahib
     y: 295,
     alive: true,
     health: 100,
-    weapon: "pistol"
+    weapon: "pistol",
+    ammo: 8,
+    maxAmmo: 8,
+    isReloading: false,
+    reloadEndTime: 0
+    // you now have an ammo system, with reloading - rahib
   }; // two players - rahib
   // health system - rahib
   // weapon system (WIP) - rahib
@@ -106,22 +115,22 @@ class Bullet { // class for bullets - rahib
     // different guns with different speeds, colors, damage and size - rahib
     // well tbh js for the bullets we havent found a way to design proper guns yet but i think like this works to distinguish em
     if (this.weapon == "pistol") {
-      this.radius = 8;
-      this.damage = 5;
+      this.radius = 6;
+      this.damage = 10;
       this.color = "black"; //rowan
-      this.speed *= 0.7;
+      this.speed *= 1.2;
     }
 
     if (this.weapon == "sniper") {
-      this.radius = 5;
-      this.damage = 45;
+      this.radius = 4;
+      this.damage = 40;
       this.color = "red";
-      this.speed *= 2.5;
+      this.speed *= 2.8;
     }
 
     if (this.weapon == "machinegun") {
       this.radius = 4;
-      this.damage = 17;
+      this.damage = 12;
       this.color = "yellow";
       this.speed *= 1.8;
     }
@@ -185,6 +194,18 @@ class Bullet { // class for bullets - rahib
 }
 
 function draw() {
+  if (Bullet.mode === "Game") {
+    if (player1.isReloading && millis() > player1.reloadEndTime) {
+      player1.ammo = player1.maxAmmo;
+      player1.isReloading = false;
+    }
+    if (player2.isReloading && millis() > player2.reloadEndTime) {
+      player2.ammo = player2.maxAmmo;
+      player2.isReloading = false;  // sets weapons to their max ammo when loading - rahib
+      // also makes sure that the player isnt reloading for obvious reasons - rahib
+    }
+  }
+
   // hit flash effect - rowan
   if (player1 && player1.health < oldHealth1) {
     fill(255,0,0,80);
@@ -320,14 +341,22 @@ function draw() {
       // basically what does this is if the player is with the drop hits the player
       // they pick it up and it splices when it hits the plauyer
       // they also get a notification with our notification system - rahib
+      // updated the drop system to include the ammo amounts - rahib
       if (player1.alive && collideRectRect(player1.x, player1.y, 50, 50, drop.x, drop.y, drop.size, drop.size)) {
         player1.weapon = drop.type;
+        player1.isReloading = false;
+        if (drop.type === "sniper") { player1.ammo = 5; player1.maxAmmo = 5; } // 5 bullets for our sniper
+        // the ammo is less but it does more damage
+        if (drop.type === "machinegun") { player1.ammo = 20; player1.maxAmmo = 20; } // 20 bullets for our machinegun
         activeNotifications.push({ text: "P1 picked up " + drop.type.toUpperCase() + "!", time: millis() });
         weaponDrops.splice(i, 1);
         continue;
       }
       if (player2.alive && collideRectRect(player2.x, player2.y, 50, 50, drop.x, drop.y, drop.size, drop.size)) {
         player2.weapon = drop.type;
+        player2.isReloading = false;
+        if (drop.type === "sniper") { player2.ammo = 5; player2.maxAmmo = 5; }
+        if (drop.type === "machinegun") { player2.ammo = 20; player2.maxAmmo = 20; }
         activeNotifications.push({ text: "P2 picked up " + drop.type.toUpperCase() + "!", time: millis() });
         weaponDrops.splice(i, 1);
         continue;
@@ -394,40 +423,134 @@ function draw() {
     image(ottomanBase,50,180,110,110);
     image(safawiBase,270,180,110,110);
 
-    // two bases - rahib
+    push();
+    noStroke();
+    // new health bars with ammo, and weapons combined - rahib
+    fill(20, 24, 33, 220);
+    // this is background 
+    rect(12, 12, 135, 68, 12);
+    
+    fill(40, 45, 58);
+    // the
+        rect(20, 22, 85, 10, 5);
 
-    fill("red");
-    rect(20, 20, 100, 20,5);
-    // make health bars rounded - rahib
-    fill("green");
-    rect(20, 20, constrain(player1.health, 0, 100), 20,5); 
+    if (player1.health > 50) { // basically depending on like the player's health, the color changes. - rahib
+      fill(46, 204, 113);
+    } else if (player1.health > 25) {
+      fill(241, 196, 15);
+    } else {
+      fill(231, 76, 60);
+    }
+    
+    let p1Width = player1.health * 0.85; 
+    if (p1Width < 0) p1Width = 0; 
+    if (p1Width > 85) p1Width = 85;
+    rect(20, 22, p1Width, 10, 5);
+    
+    fill(255, 235);
+    textSize(10);
+    textAlign(RIGHT, CENTER);
+    text(int(player1.health) + "%", 138, 26); // the percentage for the health
 
-    fill(0); // health bars - rahib
-
-    fill("red");
-    rect(280, 20, 100, 20,5);
-
-    fill("green");
-    rect(280, 20, constrain(player2.health, 0, 100), 20,5); 
-
-    fill(0);
-    fill(30, 30, 30, 180);
-    rect(15, 50, 120, 30, 8);
-
+    if (player1.weapon === "sniper") { // the weapon type basically like changes the color of your status thingy
+      fill(231, 76, 60);
+    } else if (player1.weapon === "machinegun") {
+      fill(241, 196, 15);
+    } else {
+      fill(149, 165, 166);
+    }
+    rect(20, 39, 5, 12, 2);
+    
     fill(255);
-    textSize(12);
+    textSize(11);
     textAlign(LEFT, CENTER);
-    text("P1: " + player1.weapon.toUpperCase(), 25, 65);
+    text(player1.weapon.toUpperCase(), 30, 45); // the weapon text is displayed
 
-    fill(30, 30, 30, 180);
-    rect(265, 50, 120, 30, 8);
+    if (player1.isReloading) {
+      fill(231, 76, 60);
+      textSize(10);
+      textAlign(LEFT, CENTER);
+      text("RELOADING...", 20, 64); // reloading text is displayed when player is reloading otherwise js ammo amounts - rahib
+    } else {
+      let maxPips1 = player1.maxAmmo;
+      let pipWidth1 = 85 / maxPips1 - 2; // basically our logic behind showing the ammo - rahib
+      if (pipWidth1 > 4) pipWidth1 = 4;
+      
+      for(let a = 0; a < maxPips1; a++) {
+        if (a < player1.ammo) {
+          fill(52, 152, 219);
+        } else {
+          fill(60, 65, 80);
+        }
+        rect(20 + (a * (pipWidth1 + 2)), 61, pipWidth1, 7, 1);
+      }
+    }
+    pop();
 
-    fill(255);
-    textAlign(LEFT, CENTER);
-    text("P2: " + player2.weapon.toUpperCase(), 275, 65);
     // updated UI to be round + text to be like aligned to left  - rahib
     // displays the weapon being loaded by using simple dot notation - rahib
     // two teams - rahib
+
+    push();
+    noStroke();
+    fill(20, 24, 33, 220);
+    rect(width - 147, 12, 135, 68, 12);
+    
+    fill(40, 45, 58);
+    rect(width - 138, 22, 85, 10, 5);
+    
+    if (player2.health > 50) {
+      fill(46, 204, 113);
+    } else if (player2.health > 25) {
+      fill(241, 196, 15);
+    } else {
+      fill(231, 76, 60);
+    }
+    
+    let p2Width = player2.health * 0.85;
+    if (p2Width < 0) p2Width = 0;
+    if (p2Width > 85) p2Width = 85;
+    rect(width - 138, 22, p2Width, 10, 5);
+    // same stuff for player 2 as player 1
+    fill(255, 235);
+    textSize(10);
+    textAlign(LEFT, CENTER);
+    text(int(player2.health) + "%", width - 46, 26);
+
+    if (player2.weapon === "sniper") {
+      fill(231, 76, 60);
+    } else if (player2.weapon === "machinegun") {
+      fill(241, 196, 15);
+    } else {
+      fill(149, 165, 166);
+    }
+    rect(width - 138, 39, 5, 12, 2);
+    
+    fill(255);
+    textSize(11);
+    textAlign(LEFT, CENTER);
+    text(player2.weapon.toUpperCase(), width - 128, 45);
+
+    if (player2.isReloading) {
+      fill(231, 76, 60);
+      textSize(10);
+      textAlign(LEFT, CENTER);
+      text("RELOADING...", width - 138, 64);// reloading text is displayed when player is reloading otherwise js ammo amounts - rahib
+    } else {
+      let maxPips2 = player2.maxAmmo;
+      let pipWidth2 = 85 / maxPips2 - 2;
+      if (pipWidth2 > 4) pipWidth2 = 4;
+      
+      for(let a = 0; a < maxPips2; a++) {
+        if (a < player2.ammo) {
+          fill(52, 152, 219);
+        } else {
+          fill(60, 65, 80);
+        }
+        rect(width - 138 + (a * (pipWidth2 + 2)), 61, pipWidth2, 7, 1);
+      }
+    }
+    pop();
 
     if (isMobile) {
       // mobile UI at the bottom, basically like gives them buttons which like control the game and stuff - rahib
@@ -453,9 +576,9 @@ function draw() {
       text("FIRE", 70, 480);
       // yellow for safawis fire button - rahib
       fill(50, 55, 75);
-      rect(270, 460, 40, 40, 5); 
-      rect(350, 460, 40, 40, 5); 
-      rect(310, 415, 40, 40, 5); 
+      rect(270, 460, 40, 40, 5);  
+      rect(350, 460, 40, 40, 5);  
+      rect(310, 415, 40, 40, 5);  
       rect(310, 505, 40, 40, 5);
       
       fill(245, 245, 51);
@@ -491,7 +614,7 @@ function draw() {
       text("• P1 Move: A / D keys", 60, 110);
       text("• P1 Shoot: F key", 60, 140);
       text("• P2 Move: Left / Right Arrows", 60, 180);
-      text("• P2 Shoot: . key", 60, 210);
+      text("• P2 Shoot: Right Shift key", 60, 210);
     } else {
       text("• P1 Controls: Left/Right arrows & Red FIRE", 60, 110);
       text("• P2 Controls: Left/Right arrows & Yellow FIRE", 60, 150);
@@ -500,8 +623,8 @@ function draw() {
     text("• Weapons: Collect crates dropping from the sky!", 60, 250);
     textSize(12);
     fill(140);
-    text("(Pistol: Balanced | Sniper: Heavy | MG: Rapid)", 60, 270);
-
+    text("(Pistol: 8 Shots | Sniper: 5 Shots | MG: 20 Shots)", 60, 270);
+// update how to play so it lists the amount of ammo - rahib
     textAlign(CENTER, CENTER);
     fill("#00BA00"); 
     if (collidePointRect(mouseX, mouseY, width / 2 - 90, height / 2 + 110, 180, 40, 10)) { // hover thingy - rahib
@@ -516,43 +639,6 @@ function draw() {
     // weapon selection commented as weappons drops have been added
   } // using else if to like make it separate iykwm - rahib
   else if (Bullet.mode === "P1Weapon" || Bullet.mode === "P2Weapon") {
-    /* push();
-    background(15, 18, 25);
-    textFont("SF Pro Display");
-    textAlign(CENTER, CENTER);
-
-    fill(255);
-    textSize(26);
-    if (Bullet.mode === "P1Weapon") { // weapon selection screen,  - rahib
-      text("PLAYER 1: SELECT WEAPON", width / 2, 60); // also guess what, we got rid of them typing gibberish and having to use a fallback issue yay ig - rahib
-    } else {
-      text("PLAYER 2: SELECT WEAPON", width / 2, 60);
-    }
-
-    fill("#00BA00"); // provides the same 3 options but as buttons- rahib
-    if (collidePointRect(mouseX, mouseY, width / 2 - 90, 130, 180, 40, 10)) { // hover thingy - rahib
-      fill("#00A100");
-    }
-    rect(width / 2 - 90, 130, 180, 40, 10);
-    fill(255);
-    textSize(14);
-    text("PISTOL", width / 2, 150);
-
-    fill("#00BA00");
-    if (collidePointRect(mouseX, mouseY, width / 2 - 90, 190, 180, 40, 10)) { // hover thingy - rahib
-      fill("#00A100");
-    }
-    rect(width / 2 - 90, 190, 180, 40, 10);
-    fill(255);
-    text("SNIPER", width / 2, 210);
-    fill("#00BA00");
-    if (collidePointRect(mouseX, mouseY, width / 2 - 90, 250, 180, 40, 10)) { // hover thingy - rahib
-      fill("#00A100");
-    }
-    rect(width / 2 - 90, 250, 180, 40, 10);
-    fill(255);
-    text("MACHINE GUN", width / 2, 270);
-    pop(); */
   }
   else if (Bullet.mode === "GameOver") { // game over screen - rahib
     push();
@@ -650,7 +736,8 @@ function touchStarted() {
   if (Bullet.mode === "Game" && isMobile) {
     for (let i = 0; i < touches.length; i++) {
       let t = touches[i];
-      if (collidePointRect(t.x, t.y, 45, 460, 50, 40) && player1.alive) {
+      if (collidePointRect(t.x, t.y, 45, 460, 50, 40) && player1.alive && !player1.isReloading && player1.ammo > 0) {
+        player1.ammo--;
         bullets.push(new Bullet(
           player1.x + 50,
           player1.y + 25,
@@ -659,8 +746,16 @@ function touchStarted() {
           player1.weapon // weapon is loaded from like the dot notation thingy - rahib
         ));
         mySound.play();
+        if (player1.ammo === 0) {
+          player1.isReloading = true;
+          let rTime = 1500;
+          if (player1.weapon === "sniper") rTime = 2500;
+          if (player1.weapon === "machinegun") rTime = 2000;
+          player1.reloadEndTime = millis() + rTime;
+        }
       }
-      if (collidePointRect(t.x, t.y, 305, 460, 50, 40) && player2.alive) {
+      if (collidePointRect(t.x, t.y, 305, 460, 50, 40) && player2.alive && !player2.isReloading && player2.ammo > 0) {
+        player2.ammo--;
         bullets.push(new Bullet(
           player2.x,
           player2.y + 25,
@@ -669,6 +764,13 @@ function touchStarted() {
           player2.weapon // weapon is loaded from like the dot notation thingy - rahib
         ));
         mySound.play();
+        if (player2.ammo === 0) {
+          player2.isReloading = true;
+          let rTime = 1500;
+          if (player2.weapon === "sniper") rTime = 2500;
+          if (player2.weapon === "machinegun") rTime = 2000;
+          player2.reloadEndTime = millis() + rTime;
+        }
       }
     }
   }
@@ -680,16 +782,9 @@ function mousePressed() { // - menu screen of sorts - rahib
   if(Bullet.mode != "Game") { // this also does the same for the game thing bc idk ig we might need it for the lvls or smth? - rahib
     if (Bullet.mode === "Menu") {
       if (collidePointRect(mouseX, mouseY, width / 2 - 90, height / 2 + 10, 180, 40, 10)) {
-        // Commented out selection sequence: skips straight to Game state
         resetGame();
         Bullet.mode = "Game";
       }
-      
-      // simple fix to make how to play only clickable during the menu - rahib
-      // update: i moved it up 
-      
-      // an actual how to play screen - rahib
-      // basically in the same way as the menu screen
       if (collidePointRect(mouseX, mouseY, width / 2 - 90, height / 2 + 65, 180, 40, 10)) {
         Bullet.mode = "HowTo";
       }
@@ -699,34 +794,9 @@ function mousePressed() { // - menu screen of sorts - rahib
         Bullet.mode = "Menu";
       }
     }
-    // ik this is kinda messy but basically like its the same stuff but for weapon selection using like dot notation and like it switches the mode - rahib
     else if (Bullet.mode === "P1Weapon") {
-      /* if (collidePointRect(mouseX, mouseY, width / 2 - 90, 130, 180, 40, 10)) {
-        player1.weapon = "pistol";
-        Bullet.mode = "P2Weapon";
-      }
-      if (collidePointRect(mouseX, mouseY, width / 2 - 90, 190, 180, 40, 10)) {
-        player1.weapon = "sniper";
-        Bullet.mode = "P2Weapon";
-      }
-      if (collidePointRect(mouseX, mouseY, width / 2 - 90, 250, 180, 40, 10)) {
-        player1.weapon = "machinegun";
-        Bullet.mode = "P2Weapon";
-      } */
     }
     else if (Bullet.mode === "P2Weapon") {
-      /* if (collidePointRect(mouseX, mouseY, width / 2 - 90, 130, 180, 40, 10)) {
-        player2.weapon = "pistol";
-        Bullet.mode = "Game";
-      }
-      if (collidePointRect(mouseX, mouseY, width / 2 - 90, 190, 180, 40, 10)) {
-        player2.weapon = "sniper";
-        Bullet.mode = "Game";
-      }
-      if (collidePointRect(mouseX, mouseY, width / 2 - 90, 250, 180, 40, 10)) {
-        player2.weapon = "machinegun";
-        Bullet.mode = "Game";
-      } */
     }
     else if (Bullet.mode === "GameOver") {
       if (collidePointRect(mouseX, mouseY, width / 2 - 90, height / 2 + 40, 180, 40, 10)) {
@@ -743,7 +813,8 @@ function mousePressed() { // - menu screen of sorts - rahib
 function keyPressed() {
   if (Bullet.mode === "Game") {
     // bullets for player one - rahib
-    if ((key == "f" || key == "F") && player1.alive) {
+    if ((key == "f" || key == "F") && player1.alive && !player1.isReloading && player1.ammo > 0) { // detects if the player isnt  reloading and if the ammo is greater than 0 which allows shooting
+      player1.ammo--;
       bullets.push(new Bullet(
         player1.x + 50,
         player1.y + 25,
@@ -751,22 +822,38 @@ function keyPressed() {
         "player2",
         player1.weapon // weapon is loaded from like the dot notation thingy - rahib
       ));
-     // mySound.stop()
       mySound.play();
-      
+      if (player1.ammo === 0) {
+        player1.isReloading = true;
+        let rTime = 1500;
+        if (player1.weapon === "sniper") rTime = 2500;
+        if (player1.weapon === "machinegun") rTime = 2000; 
+        player1.reloadEndTime = millis() + rTime;
+      }
     }
 
     // bullets for player 2 - rahib
-    if (key == "." && player2.alive) { // changed slash key shooting to period key shooting
+     if (keyCode === 16 && window.event.code === 'ShiftRight') {
+    if (player2.alive && !player2.isReloading && player2.ammo > 0) { // detects if the player isnt  reloading and if the ammo is greater than 0 which allows shooting
+      player2.ammo--;
       bullets.push(new Bullet(
         player2.x,
         player2.y + 25,
-        -4,
+        -4, 
         "player1",
-        player2.weapon // weapon is loaded from like the dot notation thingy - rahib
+        player2.weapon /// weapon is loaded from like the dot notation thingy - rahib
       ));
-   //   mySound.stop()
       mySound.play();
+
+      if (player2.ammo === 0) {
+        player2.isReloading = true; 
+        let rTime = 1500;
+        if (player2.weapon === "sniper") rTime = 2500;
+        if (player2.weapon === "machinegun") rTime = 2000;
+        player2.reloadEndTime = millis() + rTime;  //  basically reload time for reloading weapons - rahib
+      }
     }
+       
+     }
   }
 }
