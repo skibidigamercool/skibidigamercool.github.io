@@ -833,27 +833,49 @@ function keyPressed() {
     }
 
     // bullets for player 2 - rahib
-     if (keyCode === 16 && window.event.code === 'ShiftRight') {
-    if (player2.alive && !player2.isReloading && player2.ammo > 0) { // detects if the player isnt  reloading and if the ammo is greater than 0 which allows shooting
-      player2.ammo--;
-      bullets.push(new Bullet(
-        player2.x,
-        player2.y + 25,
-        -4, 
-        "player1",
-        player2.weapon /// weapon is loaded from like the dot notation thingy - rahib
-      ));
-      mySound.play();
+    
+    // updated to increase compatibility for old browsers - rahib
+    var e = event || window.event; // https://developer.mozilla.org/en-US/docs/Web/API/Window/event
+    // mdn about window.event
+    // it is deprecated but it is compatible as well
+    var isShift = (keyCode === 16); // checks for the keyCode 16 - rahib
+    var isRightShift = false; // right shift is false by default 
 
-      if (player2.ammo === 0) {
-        player2.isReloading = true; 
-        let rTime = 1500;
-        if (player2.weapon === "sniper") rTime = 2500;
-        if (player2.weapon === "machinegun") rTime = 2000;
-        player2.reloadEndTime = millis() + rTime;  //  basically reload time for reloading weapons - rahib
+    if (isShift) {
+      if (e.code === 'ShiftRight') {
+        isRightShift = true; // first it checks for modern browsers which already natively support the ShiftRight thingy 
+
+// https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code - MDN
+        // not all browsers support it though
+      } else if (e.location === 3 || e.keyLocation === 3) { // then after that if the above isnt supported it falls back to this
+        // https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/location#:~:text=function%20keyEvent%28event - MDN
+        
+        isRightShift = true;
+      } else if (typeof e.code === 'undefined' && typeof e.location === 'undefined') {
+        isRightShift = true; // then if nothing is returned (undefined here), it js defaults to true and if they press both shift keys itll shoot (not ideal, but preferable in comparison to it like not working at all)
       }
     }
-       
-     }
+
+    if (isRightShift) { // we use the rightshift true thingy to then shoot 
+      if (player2.alive && !player2.isReloading && player2.ammo > 0) { // detects if the player isnt  reloading and if the ammo is greater than 0 which allows shooting
+        player2.ammo--;
+        bullets.push(new Bullet(
+          player2.x,
+          player2.y + 25,
+          -4, 
+          "player1",
+          player2.weapon /// weapon is loaded from like the dot notation thingy - rahib
+        ));
+        mySound.play();
+
+        if (player2.ammo === 0) {
+          player2.isReloading = true; 
+          let rTime = 1500;
+          if (player2.weapon === "sniper") rTime = 2500;
+          if (player2.weapon === "machinegun") rTime = 2000;
+          player2.reloadEndTime = millis() + rTime;  //  basically reload time for reloading weapons - rahib
+        }
+      }
+    }
   }
 }
