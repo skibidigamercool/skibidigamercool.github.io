@@ -1,3 +1,10 @@
+// Source - https://stackoverflow.com/a/62979491
+// Posted by GuyC, modified by community. See post 'Timeline' for change history
+// Retrieved 2026-06-11, License - CC BY-SA 4.0
+
+const isIPad = !!(navigator.userAgent.match(/(iPad)/)
+          || (navigator.platform === "MacIntel" && typeof navigator.standalone !== "undefined")); // code snippet that i got off of slackoverflow - rahib
+
 // gun sound effect:
 // https://pixabay.com/sound-effects/film-special-effects-space-gun-101680/ - rahib
 let sand;
@@ -15,6 +22,8 @@ let isMobile = false;
 let weaponDrops = [];
 let lastDropTime = 0;
 let activeNotifications = []; 
+
+
 
 let activeHelicopter = null; // the helicopter starts at null - rahib
   // null = nothing
@@ -38,7 +47,14 @@ function setup() {
     // https://developer.mozilla.org/en-US/docs/Web/API/Navigator/userAgent - rahib
     isMobile = true;
     createCanvas(400, 600); // the extension is for like the control bar which will be at the bottom - rahib
-  } else {
+  } 
+  else if (isIPad) {
+    isMobile = true;
+    createCanvas(400, 600); // the extension is for like the control bar which will be at the bottom - rahib
+    // basically does the same thing but for iPad (iOS 13+) users - rahib
+  }
+    
+  else {
     createCanvas(400, 400);
   }
   angleMode(DEGREES);
