@@ -1,3 +1,21 @@
+/*
+EMPIRE WAR
+
+Empire War is a two-player battle game inspired by the Ottoman and Safawi Empires. Players fight across a desert map using pistols, sniper rifles, and machine guns while avoiding enemy fire and collecting weapon drops from helicopters. The goal is to reduce your opponent's health to zero and win the battle.
+
+The game can be played on MacBooks, Windows computers, Chromebooks, iPhones, iPads, and Android devices. Desktop players use keyboard controls, while mobile players use custom on-screen controls.
+
+Contributions:
+• Rahib — Core programming, weapons, menus, mobile support, reload system, and helicopter drops.
+• Rowan Davé — Game design, UI improvements, hit effects, environment design, balancing, and testing.
+• Dylan — Helicopter assets and movement.
+• Aaron — Desert scenery and background objects.
+• Lukas — Original player graphics.
+
+Made by Rowan Davé, Rahib, Dylan, Aaron, and Lukas.
+*/ 
+
+
 // Source - https://stackoverflow.com/a/62979491
 // Posted by GuyC, modified by community. See post 'Timeline' for change history
 // Retrieved 2026-06-11, License - CC BY-SA 4.0
@@ -261,6 +279,7 @@ function draw() {
     } else { // using touches in conjuction with a for loop with collidepointrect to allow mobile movement - rahib
       // it seems kinda complex but its really js an array for like where the device is being touched, so its not really its own thing but it kinda is
       // you can also enable a psuedo mobile mode by opening dev tools and using like that devices button
+      
       for (let i = 0; i < touches.length; i++) {
         let t = touches[i]; 
         if (collidePointRect(t.x, t.y, 10, 460, 40, 40)) player1.x -= 2.5; 
