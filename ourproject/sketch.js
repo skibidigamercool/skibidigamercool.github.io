@@ -20,30 +20,30 @@ Made by Rowan Davé, Rahib, Dylan, Aaron, and Lukas.
 // Posted by GuyC, modified by community. See post 'Timeline' for change history
 // Retrieved 2026-06-11, License - CC BY-SA 4.0
 
-const isIPad = !!(navigator.userAgent.match(/(iPad)/)
+var isIPad = !!(navigator.userAgent.match(/(iPad)/)
           || (navigator.platform === "MacIntel" && typeof navigator.standalone !== "undefined")); // code snippet that i got off of slackoverflow - rahib
 
 // gun sound effect:
 // https://pixabay.com/sound-effects/film-special-effects-space-gun-101680/ - rahib
-let sand;
-let ottomanBase; // base image - rahib
-let safawiBase; // base image - rahib
-let helicopterImg;
+var sand;
+var ottomanBase; // base image - rahib
+var safawiBase; // base image - rahib
+var helicopterImg;
 
-let hitFlash = 0; // hit flash effect - rowan
-let bullets = [ ];
-let player1;
-let player2;
-let oldHealth1 = 100;
-let isMobile = false;
+var hitFlash = 0; // hit flash effect - rowan
+var bullets = [ ];
+var player1;
+var player2;
+var oldHealth1 = 100;
+var isMobile = false;
 // weapon drops - rahib
-let weaponDrops = [];
-let lastDropTime = 0;
-let activeNotifications = []; 
+var weaponDrops = [];
+var lastDropTime = 0;
+var activeNotifications = []; 
 
 
 
-let activeHelicopter = null; // the helicopter starts at null - rahib
+var activeHelicopter = null; // the helicopter starts at null - rahib
   // null = nothing
 
 function preload() {
@@ -58,7 +58,7 @@ function preload() {
 }
 
 function setup() {
-  let ua = navigator.userAgent || navigator.vendor || window.opera;
+  var ua = navigator.userAgent || navigator.vendor || window.opera;
   if (/android|iphone|ipad|ipod/i.test(ua)) { // basically like user agent detection
     // if android iphone or ipad or ipod is found it equals to mobile mode kinda self explanatory ngl
     // you can like find an example on mozdocs
@@ -137,95 +137,93 @@ function rock(x,y){ //Aaron, for background
   arc(x,y,30,30,180,0);
 }
 
-class Bullet { // class for bullets - rahib
-  constructor(x, y, speed, target, weapon) {
-    this.x = x;
-    this.y = y;
-    this.speed = speed;
-    this.target = target;
-    this.weapon = weapon;
-    this.visible = true;
+function Bullet(x, y, speed, target, weapon) { // class for bullets - rahib
+  this.x = x;
+  this.y = y;
+  this.speed = speed;
+  this.target = target;
+  this.weapon = weapon;
+  this.visible = true;
 
-    // different guns with different speeds, colors, damage and size - rahib
-    // well tbh js for the bullets we havent found a way to design proper guns yet but i think like this works to distinguish em
-    if (this.weapon == "pistol") {
-      this.radius = 6;
-      this.damage = 10;
-      this.color = "black"; //rowan
-      this.speed *= 1.2;
-    }
-
-    if (this.weapon == "sniper") {
-      this.radius = 4;
-      this.damage = 40;
-      this.color = "red";
-      this.speed *= 2.8;
-    }
-
-    if (this.weapon == "machinegun") {
-      this.radius = 4;
-      this.damage = 12;
-      this.color = "yellow";
-      this.speed *= 1.8;
-    }
+  // different guns with different speeds, colors, damage and size - rahib
+  // well tbh js for the bullets we havent found a way to design proper guns yet but i think like this works to distinguish em
+  if (this.weapon == "pistol") {
+    this.radius = 6;
+    this.damage = 10;
+    this.color = "black"; //rowan
+    this.speed *= 1.2;
   }
 
-  draw() {
-    if (this.visible) {
-      fill(this.color);
-      ellipse(this.x, this.y, this.radius * 2);
-    }   //rowan
+  if (this.weapon == "sniper") {
+    this.radius = 4;
+    this.damage = 40;
+    this.color = "red";
+    this.speed *= 2.8;
   }
 
-  update() {
-    this.x += this.speed;
-
-    if (this.x < 0 || this.x > width) {
-      this.visible = false;
-    }
-
-    if (
-      this.target == "player1" &&
-      player1.alive &&
-      this.x > player1.x &&
-      this.x < player1.x + 50 &&
-      this.y > player1.y &&
-      this.y < player1.y + 50
-    ) {
-      player1.health -= this.damage; // takes off 20 hp pts per bullet - rahib
-
-      if (player1.health <= 0) {
-        player1.health = 0;
-        player1.alive = false;
-        Bullet.mode = "GameOver";
-      }
-
-      hitFlash = 80;
-      this.visible = false;
-    }
-
-    if (
-      this.target == "player2" &&
-      player2.alive &&
-      this.x > player2.x &&
-      this.x < player2.x + 50 &&
-      this.y > player2.y &&
-      this.y < player2.y + 50 // rowan
-    ) {
-      player2.health -= this.damage; // takes off 20 hp pts per bullet - rahib
-      // changed it from taking off 20 hp to the new weapon system
-
-      if (player2.health <= 0) {
-        player2.health = 0;
-        player2.alive = false;
-        Bullet.mode = "GameOver";
-      }
-
-      hitFlash = 80;
-      this.visible = false;
-    }
+  if (this.weapon == "machinegun") {
+    this.radius = 4;
+    this.damage = 12;
+    this.color = "yellow";
+    this.speed *= 1.8;
   }
 }
+
+Bullet.prototype.draw = function() {
+  if (this.visible) {
+    fill(this.color);
+    ellipse(this.x, this.y, this.radius * 2);
+  }   //rowan
+};
+
+Bullet.prototype.update = function() {
+  this.x += this.speed;
+
+  if (this.x < 0 || this.x > width) {
+    this.visible = false;
+  }
+
+  if (
+    this.target == "player1" &&
+    player1.alive &&
+    this.x > player1.x &&
+    this.x < player1.x + 50 &&
+    this.y > player1.y &&
+    this.y < player1.y + 50
+  ) {
+    player1.health -= this.damage; // takes off 20 hp pts per bullet - rahib
+
+    if (player1.health <= 0) {
+      player1.health = 0;
+      player1.alive = false;
+      Bullet.mode = "GameOver";
+    }
+
+    hitFlash = 80;
+    this.visible = false;
+  }
+
+  if (
+    this.target == "player2" &&
+    player2.alive &&
+    this.x > player2.x &&
+    this.x < player2.x + 50 &&
+    this.y > player2.y &&
+    this.y < player2.y + 50 // rowan
+  ) {
+    player2.health -= this.damage; // takes off 20 hp pts per bullet - rahib
+    // changed it from taking off 20 hp to the new weapon system
+
+    if (player2.health <= 0) {
+      player2.health = 0;
+      player2.alive = false;
+      Bullet.mode = "GameOver";
+    }
+
+    hitFlash = 80;
+    this.visible = false;
+  }
+};
 
 function draw() {
   if (Bullet.mode === "Game") {
@@ -280,8 +278,8 @@ function draw() {
       // it seems kinda complex but its really js an array for like where the device is being touched, so its not really its own thing but it kinda is
       // you can also enable a psuedo mobile mode by opening dev tools and using like that devices button
       
-      for (let i = 0; i < touches.length; i++) {
-        let t = touches[i]; 
+      for (var i = 0; i < touches.length; i++) {
+        var t = touches[i]; 
         if (collidePointRect(t.x, t.y, 10, 460, 40, 40)) player1.x -= 2.5; 
         if (collidePointRect(t.x, t.y, 90, 460, 40, 40)) player1.x += 2.5; 
         if (collidePointRect(t.x, t.y, 50, 415, 40, 40)) player1.y -= 2.5; 
@@ -320,8 +318,8 @@ function draw() {
 
     // basically counts milliseconds until weapons dropped, then pushes a drop - rahib
     if (millis() - lastDropTime > 30000) { // every 30000 ms new drop aka 30 seconds
-      let targetX = random(40, width - 60);
-      let types = ["machinegun", "sniper"];
+      var targetX = random(40, width - 60);
+      var types = ["machinegun", "sniper"];
       
       activeHelicopter = {
         x: -100, // made dylan's original helicopter code more advanced - rahib
@@ -356,8 +354,8 @@ function draw() {
     }
 
     // basically like updates the drops with a for loop -- rahib
-    for (let i = weaponDrops.length - 1; i >= 0; i--) {
-      let drop = weaponDrops[i];
+    for (var i = weaponDrops.length - 1; i >= 0; i--) {
+      var drop = weaponDrops[i];
       if (drop.y < 280) {
         drop.y += 2; 
       }
@@ -399,7 +397,7 @@ function draw() {
     }
 
     // uses the for loop with miliseconds to display an announcement for every single drop basically - rahib
-    for (let i = activeNotifications.length - 1; i >= 0; i--) {
+    for (var i = activeNotifications.length - 1; i >= 0; i--) {
       if (millis() - activeNotifications[i].time > 2000) {
         activeNotifications.splice(i, 1);
       } else {
@@ -413,7 +411,7 @@ function draw() {
     }
 
     // bullets - rahib
-    for (let i = bullets.length - 1; i >= 0; i--) {
+    for (var i = bullets.length - 1; i >= 0; i--) {
       bullets[i].draw();
       bullets[i].update();
 
@@ -438,13 +436,13 @@ function draw() {
 
     // basically makes it so that if the bullets shoot each other they disappear - rahib
     // oh yeah btw this kinda doesnt work if the weapons are different, but i think ill js make this an intended feature, not a bug bc it adds benefit to higher weapon tiers 
-    for (let i = 0; i < bullets.length; i++) {
-      for (let j = i + 1; j < bullets.length; j++) {
-        let b1 = bullets[i];
-        let b2 = bullets[j];
+    for (var i = 0; i < bullets.length; i++) {
+      for (var j = i + 1; j < bullets.length; j++) {
+        var b1 = bullets[i];
+        var b2 = bullets[j];
 
         if (b1.visible && b2.visible) {
-          let d = dist(b1.x, b1.y, b2.x, b2.y);
+          var d = dist(b1.x, b1.y, b2.x, b2.y);
 
           if (d < b1.radius + b2.radius) {
             b1.visible = false;
@@ -477,7 +475,7 @@ function draw() {
       fill(231, 76, 60);
     }
     
-    let p1Width = player1.health * 0.85; 
+    var p1Width = player1.health * 0.85; 
     if (p1Width < 0) p1Width = 0; 
     if (p1Width > 85) p1Width = 85;
     rect(20, 22, p1Width, 10, 5);
@@ -507,11 +505,11 @@ function draw() {
       textAlign(LEFT, CENTER);
       text("RELOADING...", 20, 64); // reloading text is displayed when player is reloading otherwise js ammo amounts - rahib
     } else {
-      let maxPips1 = player1.maxAmmo;
-      let pipWidth1 = 85 / maxPips1 - 2; // basically our logic behind showing the ammo - rahib
+      var maxPips1 = player1.maxAmmo;
+      var pipWidth1 = 85 / maxPips1 - 2; // basically our logic behind showing the ammo - rahib
       if (pipWidth1 > 4) pipWidth1 = 4;
       
-      for(let a = 0; a < maxPips1; a++) {
+      for(var a = 0; a < maxPips1; a++) {
         if (a < player1.ammo) {
           fill(52, 152, 219);
         } else {
@@ -542,7 +540,7 @@ function draw() {
       fill(231, 76, 60);
     }
     
-    let p2Width = player2.health * 0.85;
+    var p2Width = player2.health * 0.85;
     if (p2Width < 0) p2Width = 0;
     if (p2Width > 85) p2Width = 85;
     rect(width - 138, 22, p2Width, 10, 5);
@@ -572,11 +570,11 @@ function draw() {
       textAlign(LEFT, CENTER);
       text("RELOADING...", width - 138, 64);// reloading text is displayed when player is reloading otherwise js ammo amounts - rahib
     } else {
-      let maxPips2 = player2.maxAmmo;
-      let pipWidth2 = 85 / maxPips2 - 2;
+      var maxPips2 = player2.maxAmmo;
+      var pipWidth2 = 85 / maxPips2 - 2;
       if (pipWidth2 > 4) pipWidth2 = 4;
       
-      for(let a = 0; a < maxPips2; a++) {
+      for(var a = 0; a < maxPips2; a++) {
         if (a < player2.ammo) {
           fill(52, 152, 219);
         } else {
@@ -769,8 +767,8 @@ fill("#FFFF24");
 
 function touchStarted() {
   if (Bullet.mode === "Game" && isMobile) {
-    for (let i = 0; i < touches.length; i++) {
-      let t = touches[i];
+    for (var i = 0; i < touches.length; i++) {
+      var t = touches[i];
       if (collidePointRect(t.x, t.y, 45, 460, 50, 40) && player1.alive && !player1.isReloading && player1.ammo > 0) {
         player1.ammo--;
         bullets.push(new Bullet(
@@ -783,7 +781,7 @@ function touchStarted() {
         mySound.play();
         if (player1.ammo === 0) {
           player1.isReloading = true;
-          let rTime = 1500;
+          var rTime = 1500;
           if (player1.weapon === "sniper") rTime = 2500;
           if (player1.weapon === "machinegun") rTime = 2000;
           player1.reloadEndTime = millis() + rTime;
@@ -801,7 +799,7 @@ function touchStarted() {
         mySound.play();
         if (player2.ammo === 0) {
           player2.isReloading = true;
-          let rTime = 1500;
+          var rTime = 1500;
           if (player2.weapon === "sniper") rTime = 2500;
           if (player2.weapon === "machinegun") rTime = 2000;
           player2.reloadEndTime = millis() + rTime;
@@ -860,7 +858,7 @@ function keyPressed() {
       mySound.play();
       if (player1.ammo === 0) {
         player1.isReloading = true;
-        let rTime = 1500;
+        var rTime = 1500;
         if (player1.weapon === "sniper") rTime = 2500;
         if (player1.weapon === "machinegun") rTime = 2000; 
         player1.reloadEndTime = millis() + rTime;
@@ -905,10 +903,10 @@ function keyPressed() {
 
         if (player2.ammo === 0) {
           player2.isReloading = true; 
-          let rTime = 1500;
+          var rTime = 1500;
           if (player2.weapon === "sniper") rTime = 2500;
           if (player2.weapon === "machinegun") rTime = 2000;
-          player2.reloadEndTime = millis() + rTime;  //  basically reload time for reloading weapons - rahib
+          player2.reloadEndTime = millis() + rTime; //  basically reload time for reloading weapons - rahib
         }
       }
     }
