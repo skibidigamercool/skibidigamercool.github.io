@@ -1,15 +1,25 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-        <script>
+        <!-- prevent ie 11 crash? -->
+
+
+         <script>
     if (typeof window.AudioContext === 'undefined') {
-      window.AudioContext = function() {};
-      window.AudioContext.prototype = {};
+      window.AudioContext = function() {
+        return {
+          createGain: function() { return { gain: { value: 1 }, connect: function() {} }; },
+          createOscillator: function() { return { connect: function() {}, start: function() {}, stop: function() {} }; },
+          destination: {},
+          sampleRate: 44100,
+          currentTime: 0
+        };
+      };
+      window.AudioContext.prototype = window.AudioContext();
     }
     if (typeof window.webkitAudioContext === 'undefined') {
       window.webkitAudioContext = window.AudioContext;
     }
   </script>
-<!-- prevent ie 11 crash? -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/3.45.1/minified.js" integrity="sha512-KG2UswV/2JZm3p2HRWahkWbd5BGql/b8lSfbDWHrhiat6ORvLUChBE0mMqZTNy0Jz6GbEbQPbxT4KDcmh5/sjw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://unpkg.com/@free-side/audioworklet-polyfill/dist/audioworklet-polyfill.js"></script>
       <script src="p5.-0.7.3.js"></script>
